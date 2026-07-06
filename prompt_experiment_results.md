@@ -22,7 +22,7 @@ I would be grateful if the deadline could be extended to [Proposed New Due Date]
 Thank you for your understanding and consideration.
 
 Sincerely,
-
+ 
 [Your Name]
 
 ---
