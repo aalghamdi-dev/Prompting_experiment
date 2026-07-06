@@ -1,66 +1,21 @@
 """
 Prompt Engineering Experiment
 ------------------------------
-Runs the same task ("write an email requesting a deadline extension")
-through 5 prompts of increasing quality, using OpenRouter + Gemini 2.5 Flash Lite.
+Interactively runs prompts entered by the user through the OpenRouter API
+(Gemini 2.5 Flash Lite). Type 'exit' at the prompt to stop.
 
 """
 
 import textwrap
 from openai import OpenAI
 
-API_KEY = "private api key is inserted here"  
+API_KEY = "private api key is inserted here"
 MODEL = "google/gemini-2.5-flash-lite"
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
     api_key=API_KEY,
 )
-
-# ------------------------------------------------------------------
-# 2. The prompts (same task but different wording)
-# ------------------------------------------------------------------
-PROMPTS = {
-    "1. Basic": (
-        "Write an email asking for a deadline extension in 120 words."
-    ),
-    "2. Improved": (
-        "Write a polite email to my professor asking for a 3-day extension "
-        "on my assignment because I am sick. Keep it 120 words."
-    ),
-    "3. Detailed": (
-        "You are a university student writing to your professor. Write a "
-        "polite, respectful email requesting a 3-day extension on your Data "
-        "Structures assignment due to a documented illness. Mention that you "
-        "have already completed 70 percent of the work and will submit as soon as "
-        "possible. Keep it in the range of 120 words."
-    ),
-    "4. Creative": (
-        "Write a warm, empathetic email from a student to a professor, asking "
-        "for an extension on an assignment due to illness, using a genuine "
-        "and heartfelt tone. Feel free to add a metaphor about how illness "
-        "slowed down your progress. Keep it in the range of 120 words."
-    ),
-    "5. Constrained": (
-        "You are a university student. Write a formal email to your "
-        "professor requesting a 3-day extension on your assignment due to "
-        "illness. Keep it in the range of 120 words. use a professional tone, and "
-        "include a clear subject line. "
-    ),
-}
-
-# ------------------------------------------------------------------
-# 3. Colors to highlighting each prompt's output 
-# ------------------------------------------------------------------
-COLORS = {
-    "1. Basic": "\033[91m",        # red
-    "2. Improved": "\033[93m",     # yellow
-    "3. Detailed": "\033[92m",     # green
-    "4. Creative": "\033[95m",     # magenta
-    "5. Constrained": "\033[96m",  # cyan
-}
-RESET = "\033[0m"
-BOLD = "\033[1m"
 
 
 def run_prompt(prompt_text: str) -> str:
@@ -78,40 +33,49 @@ def run_prompt(prompt_text: str) -> str:
 
 
 def main():
-    results = {}
+    results = []  # list of (prompt_text, output) tuples, in order entered
 
-    for label, prompt_text in PROMPTS.items():
-        color = COLORS.get(label, "")
+    print("Prompt Engineering Experiment")
+    print("Type your prompt and press Enter. Type 'exit' to quit.\n")
 
-        print(f"\n{color}{BOLD}{'=' * 70}")
-        print(label)
-        print(f"{'=' * 70}{RESET}")
-        print(f"{color}PROMPT:{RESET} {prompt_text}\n")
+    while True:
+        prompt_text = input("Enter your prompt: ").strip()
+
+        if prompt_text.lower() == "exit":
+            break
+
+        if not prompt_text:
+            print("Please enter a prompt, or type 'exit' to quit.\n")
+            continue
 
         try:
             output = run_prompt(prompt_text)
         except Exception as e:
             output = f"[ERROR calling API: {e}]"
 
-        results[label] = output
-        print(f"{color}RESPONSE:{RESET}")
+        results.append((prompt_text, output))
+
+        print("\nRESPONSE:")
         print(textwrap.fill(output, width=80))
         print()
 
     # --------------------------------------------------------------
-    # 4. Save everything to a markdown file
+    # Save everything to a markdown file
     # --------------------------------------------------------------
-    out_file = "prompt_experiment_results.md"
-    with open(out_file, "w", encoding="utf-8") as f:
-        f.write("# Prompt Engineering Experiment Results\n\n")
-        f.write(f"Model used: `{MODEL}`\n\n")
-        for label, prompt_text in PROMPTS.items():
-            f.write(f"## {label}\n\n")
-            f.write(f"**Prompt:**\n> {prompt_text}\n\n")
-            f.write(f"**Response:**\n\n{results[label]}\n\n")
-            f.write("---\n\n")
+    if results:
+        out_file = "prompt_experiment_results.md"
+        with open(out_file, "w", encoding="utf-8") as f:
+            f.write("# Prompt Engineering Experiment Results\n\n")
+            f.write(f"Model used: `{MODEL}`\n\n")
+            for i, (prompt_text, output) in enumerate(results, start=1):
+                f.write(f"## Prompt {i}\n\n")
+                f.write(f"**Prompt:**\n> {prompt_text}\n\n")
+                f.write(f"**Response:**\n\n{output}\n\n")
+                f.write("---\n\n")
 
-    print(f"{BOLD}All 5 results saved to {out_file}{RESET}")
+        print(f"All {len(results)} result(s) saved to {out_file}")
+    else:
+        print("No prompts were run, nothing to save.")
 
 
 if __name__ == "__main__":
