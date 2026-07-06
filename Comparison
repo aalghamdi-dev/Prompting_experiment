@@ -1,10 +1,11 @@
-comparison :
+Comparison between the responses :
 
-1. Basic – Too generic, and it got cut off mid-sentence (ran out of tokens) because the AI had to guess what to say without any details.
-2. Improved – Better: added the sickness reason and a timeframe, but still full of placeholders and no real specifics.
-3. Detailed – Best one. Specific, complete, and finished within the word limit. Mentioning the 70% progress and documented illness gave the AI real content to work with instead of guessing.
-4. Creative – Nice tone and imagery, but it also got cut off before finishing, and the "storm" metaphor feels a bit much for an email to a professor.
-5. Constrained – Clean, complete, and professional. The word limit forced the AI to stay short and not ramble.
+1. Basic – Okay, but very generic. No real reason given, just placeholders like "[briefly state reason]". Feels empty.
+2. Improved – Better. Adds sickness as the reason, but still just a template with blanks to fill in.
+3. Detailed – Has real details (documented illness, doctor's note, 70% of work done). Sounds honest and easy to believe.
+4. Creative – Nice and warm, uses a emotional metaphor. Good tone, but a little less direct than #3.
+5. Constrained – Clean and professional, but plain. No extra details, feels like a robot wrote that.
 
-Best prompt: #3 (Detailed). It's the only one that was both complete (didn't hit the token cutoff) and specific enough to sound like a real, convincing request.
-It combined Role + Task + Context, so the AI had real details to write with instead of filler.
+Best prompt: #3 (Detailed). It gives the AI real facts to use (illness proof + progress made), so the email sounds true and convincing, not just a generic template.
+
+Conclusion: The more details provided, the more accurate and logical the response will be.
